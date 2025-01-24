@@ -5,6 +5,7 @@
   "dependencies": {
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
+    "@tanstack/react-table": "^8.20.6",
     "axios": "^1.7.9",
     "cra-template": "1.2.0",
     "react": "^19.0.0",

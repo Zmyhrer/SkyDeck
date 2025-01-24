@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Navbar from "./components/navbar";
+import Task_Dashboard from "./components/task_dashboard";
 
 function App() {
   const [userLocation, setUserLocation] = useState({
@@ -85,31 +86,7 @@ function App() {
       {loading && <p className="mt-4 text-gray-600">Loading...</p>}
       {error && <p className="mt-4 text-red-500">{error}</p>}
 
-      {/* Display weather forecast */}
-      {weather && weather.properties && weather.properties.periods ? (
-        <div className="mt-8 max-w-3xl mx-auto text-left">
-          <h2 className="text-2xl font-semibold mb-4">Weather Forecast</h2>
-          {weather.properties.periods.map((period, index) => (
-            <div
-              key={index}
-              className="border p-4 mb-4 rounded shadow-sm bg-gray-100"
-            >
-              <h3 className="text-xl font-medium">{period.name}</h3>
-              <img src={period.icon} alt={period.name} />
-              <p>
-                <strong>Wind:</strong> {period.windSpeed} {period.windDirection}{" "}
-                <strong>Temperature:</strong> {period.temperature}°
-                {period.temperatureUnit}
-              </p>
-              <p>
-                <strong>Forecast:</strong> {period.detailedForecast}
-              </p>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <p className="mt-4">No forecast data available.</p>
-      )}
+      <Task_Dashboard />
     </div>
   );
 }
