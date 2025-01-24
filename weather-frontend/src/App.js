@@ -1,16 +1,40 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Navbar from "./components/navbar";
 
 function App() {
-  const [query, setQuery] = useState({ office: "", gridX: "", gridY: "" }); // User input
-  const [weather, setWeather] = useState(null); // Weather data
-  const [loading, setLoading] = useState(false); // Loading state
-  const [error, setError] = useState(null); // Error handling
+  const [userLocation, setUserLocation] = useState({
+    latitude: "",
+    longitude: "",
+  });
+  const [weather, setWeather] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Fetch weather data from the backend
+  const getUserLocation = () => {
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            latitude: position.coords.latitude.toFixed(4),
+            longitude: position.coords.longitude.toFixed(4),
+          });
+        },
+        (err) => {
+          setError(
+            "Failed to get your location. Please enable location access."
+          );
+          console.error("Geolocation error:", err);
+        }
+      );
+    } else {
+      setError("Geolocation is not supported by your browser.");
+    }
+  };
+
   const fetchWeather = async () => {
-    if (!query.office || !query.gridX || !query.gridY) {
-      setError("Please fill in all fields.");
+    if (!userLocation.latitude || !userLocation.longitude) {
+      setError("Location not available. Please try again.");
       return;
     }
     setLoading(true);
@@ -18,98 +42,62 @@ function App() {
 
     try {
       const response = await axios.get("http://localhost:5000/api/weather", {
-        params: query,
+        params: userLocation,
       });
-      setWeather(response.data); // Save weather data to state
-      localStorage.setItem("weather", JSON.stringify(response.data)); // Optional: Cache data in local storage
+      setWeather(response.data);
+      localStorage.setItem("weather", JSON.stringify(response.data));
     } catch (err) {
       setError("Failed to fetch weather data. Please try again.");
+      console.error("Weather fetch error:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  // Load cached weather data (if available) on app start
   useEffect(() => {
     const cachedWeather = localStorage.getItem("weather");
     if (cachedWeather) {
       setWeather(JSON.parse(cachedWeather));
     }
+    getUserLocation();
   }, []);
 
   return (
-    <div
-      style={{
-        fontFamily: "Arial, sans-serif",
-        textAlign: "center",
-        padding: "20px",
-      }}
-    >
-      <h1>SkyDeck</h1>
-      <div style={{ marginBottom: "20px" }}>
-        <input
-          type="text"
-          placeholder="Office (e.g., SEW)"
-          value={query.office}
-          onChange={(e) => setQuery({ ...query, office: e.target.value })}
-          style={{ marginRight: "10px" }}
-        />
-        <input
-          type="text"
-          placeholder="GridX (e.g., 120)"
-          value={query.gridX}
-          onChange={(e) => setQuery({ ...query, gridX: e.target.value })}
-          style={{ marginRight: "10px" }}
-        />
-        <input
-          type="text"
-          placeholder="GridY (e.g., 70)"
-          value={query.gridY}
-          onChange={(e) => setQuery({ ...query, gridY: e.target.value })}
-        />
-        <button
-          onClick={fetchWeather}
-          style={{
-            marginLeft: "10px",
-            padding: "5px 15px",
-            cursor: "pointer",
-            backgroundColor: "#007BFF",
-            color: "#fff",
-            border: "none",
-            borderRadius: "4px",
-          }}
-        >
-          Get Weather
-        </button>
-      </div>
+    <div className="font-sans text-center">
+      <Navbar />
+      <h1 className="text-3xl font-bold text-blue-600">SkyDeck</h1>
+      <button
+        onClick={fetchWeather}
+        className="mt-4 px-6 py-2 text-white bg-blue-500 rounded"
+      >
+        Get My Weather
+      </button>
+
+      {/* Display user's location */}
+      {userLocation.latitude && userLocation.longitude && (
+        <p className="mt-4">
+          Your location: Latitude {userLocation.latitude}, Longitude{" "}
+          {userLocation.longitude}
+        </p>
+      )}
 
       {/* Display loading, errors, or weather data */}
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {loading && <p className="mt-4 text-gray-600">Loading...</p>}
+      {error && <p className="mt-4 text-red-500">{error}</p>}
 
-      {weather && (
-        <div
-          style={{
-            marginTop: "20px",
-            textAlign: "left",
-            maxWidth: "600px",
-            margin: "auto",
-          }}
-        >
-          <h2>Weather Forecast</h2>
+      {/* Display weather forecast */}
+      {weather && weather.properties && weather.properties.periods ? (
+        <div className="mt-8 max-w-3xl mx-auto text-left">
+          <h2 className="text-2xl font-semibold mb-4">Weather Forecast</h2>
           {weather.properties.periods.map((period, index) => (
             <div
               key={index}
-              style={{
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                padding: "10px",
-                marginBottom: "10px",
-                backgroundColor: "#f9f9f9",
-              }}
+              className="border p-4 mb-4 rounded shadow-sm bg-gray-100"
             >
-              <h3>{period.name}</h3>
+              <h3 className="text-xl font-medium">{period.name}</h3>
+              <img src={period.icon} alt={period.name} />
               <p>
+                <strong>Wind:</strong> {period.windSpeed} {period.windDirection}{" "}
                 <strong>Temperature:</strong> {period.temperature}°
                 {period.temperatureUnit}
               </p>
@@ -119,6 +107,8 @@ function App() {
             </div>
           ))}
         </div>
+      ) : (
+        <p className="mt-4">No forecast data available.</p>
       )}
     </div>
   );

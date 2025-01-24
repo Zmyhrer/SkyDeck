@@ -6,24 +6,34 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Connect to MongoDB
-const mongoose = require("mongoose");
-mongoose.connect("mongodb://localhost:27017/SkyDeck", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-
-// Example route to fetch weather data
+// Route to fetch weather forecast data
 app.get("/api/weather", async (req, res) => {
-  const { office, gridX, gridY } = req.query;
+  const { latitude, longitude } = req.query;
+
+  if (!latitude || !longitude) {
+    return res
+      .status(400)
+      .json({ error: "Latitude and longitude are required" });
+  }
 
   try {
-    const response = await axios.get(
-      `https://api.weather.gov/gridpoints/${office}/${gridX},${gridY}/forecast`,
+    // Step 1: Get grid information from the NWS API
+    const pointsResponse = await axios.get(
+      `https://api.weather.gov/points/${latitude},${longitude}`,
       { headers: { "User-Agent": "SkyDeck (zach.myhrer@gmail.com)" } }
     );
-    res.json(response.data);
+
+    const forecastUrl = pointsResponse.data.properties.forecast;
+
+    // Step 2: Fetch the actual weather forecast using the forecast URL
+    const forecastResponse = await axios.get(forecastUrl, {
+      headers: { "User-Agent": "SkyDeck (zach.myhrer@gmail.com)" },
+    });
+
+    // Return the forecast data to the client
+    res.json(forecastResponse.data);
   } catch (error) {
+    console.error("Error fetching weather data:", error.message);
     res.status(500).json({ error: "Failed to fetch weather data" });
   }
 });
