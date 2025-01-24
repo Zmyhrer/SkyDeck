@@ -5,105 +5,154 @@ import {
   getCoreRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ChartBarIcon } from "@heroicons/react/24/outline"; // Import the icon
-
-// Reusable component for rendering the icon and value in the table cell
-const IconWithTextCell = ({ icon: Icon, value }) => (
-  <div className="flex items-center justify-center">
-    {" "}
-    {/* Center the content */}
-    <Icon className="h-5 w-5 mr-2 text-gray-500" /> {/* Icon */}
-    {value} {/* Value */}
-  </div>
-);
+import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/outline";
 
 function TaskDashboard() {
   // Sample data for the table
   const defaultData = [
     {
       Task: "Hot Weather",
-      Result: "TRUE",
+      Result: false,
       C1: 24,
       C2: 100,
       C3: 120,
       C4: 50,
+      C5: 80,
+      C6: 90,
+      C7: 100,
+    },
+    {
+      Task: "Cold Weather",
+      Result: true,
+      C1: 34,
+      C2: 100,
+      C3: 120,
+      C4: 50,
+      C5: 80,
+      C6: 90,
+      C7: 100,
     },
   ];
 
-  const header_titles = ["Task", "Result", "C1", "C2", "C3", "C4"];
+  const header_titles = [
+    "Task",
+    "Result",
+    "C1",
+    "C2",
+    "C3",
+    "C4",
+    "C5",
+    "C6",
+    "C7",
+  ];
 
   // Column definition for the table
   const columnHelper = createColumnHelper();
   const columns = header_titles.map((title) => {
     if (title === "Task") {
-      // Left-align the "Task" column
+      // Color the Task column based on the Result column value
       return columnHelper.accessor(title, {
+        id: title,
         header: () => title,
-        cell: (info) => <div className="text-left">{info.renderValue()}</div>,
+        cell: (info) => {
+          const row = info.row.original;
+          const isResultTrue = row.Result;
+          return (
+            <div
+              className={`text-left font-bold ${
+                isResultTrue ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {info.getValue()}
+            </div>
+          );
+        },
       });
     }
 
-    // For columns like C1, C2, etc., use IconWithTextCell component
-    if (title.startsWith("C")) {
+    if (title === "Result") {
+      // Customize the Result column to show TRUE or FALSE with colors
       return columnHelper.accessor(title, {
+        id: title,
         header: () => title,
-        cell: (info) => (
-          <IconWithTextCell
-            icon={ChartBarIcon} // Using ChartBarIcon for these columns
-            value={info.getValue()}
-          />
-        ),
-      });
-    } else {
-      // Regular column with text values
-      return columnHelper.accessor(title, {
-        header: () => title,
-        cell: (info) => info.renderValue(),
+        cell: (info) => {
+          const value = info.getValue();
+          return (
+            <span
+              className={`font-bold ${
+                value ? "text-green-500" : "text-red-500"
+              }`}
+            >
+              {value ? "TRUE" : "FALSE"}
+            </span>
+          );
+        },
       });
     }
+
+    if (title.match(/^C/)) {
+      // Matches titles starting with 'C' (with icon and value)
+      return columnHelper.accessor(title, {
+        id: title,
+        header: () => title,
+        cell: (info) => {
+          const value = info.getValue();
+          const isUp = value > 50; // Determine if value is up or down
+          return (
+            <div className="flex items-center justify-center">
+              {isUp ? (
+                <ArrowUpIcon className="h-5 w-5 text-green-500 mr-2" />
+              ) : (
+                <ArrowDownIcon className="h-5 w-5 text-red-500 mr-2" />
+              )}
+              {value}
+            </div>
+          );
+        },
+      });
+    }
+
+    // Default rendering for other columns
+    return columnHelper.accessor(title, {
+      id: title,
+      header: () => title,
+      cell: (info) => info.getValue(),
+    });
   });
 
-  // Setting up the table with useReactTable hook
-  const [data] = React.useState(() => [...defaultData]);
-  const rerender = React.useReducer(() => ({}), {})[1];
-
   const table = useReactTable({
-    data,
+    data: defaultData,
     columns,
     getCoreRowModel: getCoreRowModel(),
   });
 
   return (
-    <div className="p-2">
-      <table className="min-w-full border-collapse border border-gray-300">
-        <thead>
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="bg-gray-50">
           {table.getHeaderGroups().map((headerGroup) => (
             <tr key={headerGroup.id}>
               {headerGroup.headers.map((header) => (
                 <th
                   key={header.id}
-                  className="border border-gray-300 px-4 py-2 text-center bg-gray-100"
+                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
-                  {header.isPlaceholder
-                    ? null
-                    : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext()
-                      )}
+                  {flexRender(
+                    header.column.columnDef.header,
+                    header.getContext()
+                  )}
                 </th>
               ))}
             </tr>
           ))}
         </thead>
-        <tbody>
+        <tbody className="bg-white divide-y divide-gray-200">
           {table.getRowModel().rows.map((row) => (
             <tr key={row.id}>
               {row.getVisibleCells().map((cell) => (
                 <td
                   key={cell.id}
-                  className={`border border-gray-300 px-4 py-2 ${
-                    cell.column.id === "Task" ? "text-left" : "text-center"
-                  }`} // Left align "Task" column, center others
+                  className="px-6 py-4 whitespace-nowrap text-center"
                 >
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </td>
@@ -112,7 +161,6 @@ function TaskDashboard() {
           ))}
         </tbody>
       </table>
-      <div className="h-4" />
     </div>
   );
 }
