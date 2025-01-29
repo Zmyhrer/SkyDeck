@@ -1,166 +1,165 @@
 import React from "react";
+import ReactDOM from "react-dom/client";
 import {
-  createColumnHelper,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-import { ArrowUpIcon, ArrowDownIcon } from "@heroicons/react/24/outline";
+import { makeData } from "./makeData";
 
 function TaskDashboard() {
-  // Sample data for the table
-  const defaultData = [
-    {
-      Task: "Hot Weather",
-      Result: false,
-      C1: 24,
-      C2: 100,
-      C3: 120,
-      C4: 50,
-      C5: 80,
-      C6: 90,
-      C7: 100,
-    },
-    {
-      Task: "Cold Weather",
-      Result: true,
-      C1: 34,
-      C2: 100,
-      C3: 120,
-      C4: 50,
-      C5: 80,
-      C6: 90,
-      C7: 100,
-    },
-  ];
+  const rerender = React.useReducer(() => ({}), {})[1];
 
-  const header_titles = [
-    "Task",
-    "Result",
-    "C1",
-    "C2",
-    "C3",
-    "C4",
-    "C5",
-    "C6",
-    "C7",
-  ];
+  const columns = React.useMemo(
+    () => [
+      {
+        accessorKey: "firstName",
+        cell: (info) => (
+          <div className="text-left">{info.getValue()}</div> // Left-align firstName column data
+        ),
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorFn: (row) => row.lastName,
+        id: "lastName",
+        cell: (info) => info.getValue(),
+        header: () => <span>Last Name</span>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "age",
+        header: () => "Age",
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "visits",
+        header: () => <span>Visits</span>,
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "status",
+        header: "Status",
+        footer: (props) => props.column.id,
+      },
+      {
+        accessorKey: "progress",
+        header: "Profile Progress",
+        footer: (props) => props.column.id,
+      },
+    ],
+    []
+  );
 
-  // Column definition for the table
-  const columnHelper = createColumnHelper();
-  const columns = header_titles.map((title) => {
-    if (title === "Task") {
-      // Color the Task column based on the Result column value
-      return columnHelper.accessor(title, {
-        id: title,
-        header: () => title,
-        cell: (info) => {
-          const row = info.row.original;
-          const isResultTrue = row.Result;
-          return (
-            <div
-              className={`text-left font-bold ${
-                isResultTrue ? "text-green-500" : "text-red-500"
-              }`}
-            >
-              {info.getValue()}
-            </div>
-          );
-        },
-      });
-    }
+  const [data, setData] = React.useState(() => makeData(100));
+  const refreshData = () => setData(() => makeData(100));
 
-    if (title === "Result") {
-      // Customize the Result column to show TRUE or FALSE with colors
-      return columnHelper.accessor(title, {
-        id: title,
-        header: () => title,
-        cell: (info) => {
-          const value = info.getValue();
-          return (
-            <span
-              className={`font-bold ${
-                value ? "text-green-500" : "text-red-500"
-              }`}
-            >
-              {value ? "TRUE" : "FALSE"}
-            </span>
-          );
-        },
-      });
-    }
+  return (
+    <>
+      <TaskTable data={data} columns={columns} />
+    </>
+  );
+}
 
-    if (title.match(/^C/)) {
-      // Matches titles starting with 'C' (with icon and value)
-      return columnHelper.accessor(title, {
-        id: title,
-        header: () => title,
-        cell: (info) => {
-          const value = info.getValue();
-          const isUp = value > 50; // Determine if value is up or down
-          return (
-            <div className="flex items-center justify-center">
-              {isUp ? (
-                <ArrowUpIcon className="h-5 w-5 text-green-500 mr-2" />
-              ) : (
-                <ArrowDownIcon className="h-5 w-5 text-red-500 mr-2" />
-              )}
-              {value}
-            </div>
-          );
-        },
-      });
-    }
-
-    // Default rendering for other columns
-    return columnHelper.accessor(title, {
-      id: title,
-      header: () => title,
-      cell: (info) => info.getValue(),
-    });
+function TaskTable({ data, columns }) {
+  const [pagination, setPagination] = React.useState({
+    pageIndex: 0,
+    pageSize: 10,
   });
 
   const table = useReactTable({
-    data: defaultData,
     columns,
+    data,
+    debugTable: true,
     getCoreRowModel: getCoreRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    onPaginationChange: setPagination,
+    state: {
+      pagination,
+    },
   });
 
   return (
-    <div className="overflow-x-auto">
-      <table className="min-w-full divide-y divide-gray-200">
-        <thead className="bg-gray-50">
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr key={headerGroup.id}>
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  {flexRender(
-                    header.column.columnDef.header,
-                    header.getContext()
-                  )}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {table.getRowModel().rows.map((row) => (
-            <tr key={row.id}>
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className="px-6 py-4 whitespace-nowrap text-center"
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
+    <div className="p-4 shadow-lg rounded-lg bg-white">
+      <div className="overflow-x-auto">
+        <table className="min-w-full table-auto">
+          <thead className="bg-gray-200">
+            {table.getHeaderGroups().map((headerGroup) => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <th
+                    key={header.id}
+                    colSpan={header.colSpan}
+                    className="p-3 border-2 border-white"
+                  >
+                    <div
+                      {...{
+                        className: header.column.getCanSort()
+                          ? "cursor-pointer select-none"
+                          : "",
+                        onClick: header.column.getToggleSortingHandler(),
+                      }}
+                    >
+                      {flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
+                      {{
+                        asc: " 🔼",
+                        desc: " 🔽",
+                      }[header.column.getIsSorted()] ?? null}
+                    </div>
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map((row) => (
+              <tr key={row.id} className="hover:bg-gray-100">
+                {row.getVisibleCells().map((cell) => (
+                  <td
+                    key={cell.id}
+                    className={`p-3 border-t ${
+                      cell.column.id === "firstName" ? "text-left" : ""
+                    }`} // Left-align firstName column data only
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <div className="flex items-center justify-center gap-2 mt-4">
+        <button
+          className="border rounded p-2 bg-gray-200 hover:bg-gray-300"
+          onClick={() => table.previousPage()}
+          disabled={!table.getCanPreviousPage()}
+        >
+          {"<"}
+        </button>
+        <button
+          className="border rounded p-2 bg-gray-200 hover:bg-gray-300"
+          onClick={() => table.nextPage()}
+          disabled={!table.getCanNextPage()}
+        >
+          {">"}
+        </button>
+
+        <span className="flex items-center gap-1">
+          <div>Page</div>
+          <strong>
+            {table.getState().pagination.pageIndex + 1} of{" "}
+            {table.getPageCount().toLocaleString()}
+          </strong>
+        </span>
+      </div>
     </div>
   );
 }
