@@ -12,12 +12,12 @@ type CellProps = {
 };
 
 const Cell = ({ value, isFirstColumn }: CellProps) => {
-  const firstColumnClass = isFirstColumn ? "sticky left-0 bg-white z-10 " : "";
+  const firstColumnClass = isFirstColumn ? "sticky left-0 border-l" : "";
 
   if (isElementValue(value)) {
     return (
       <td
-        className={`bg-white border border-gray-200 px-2 py-2 min-w-[100px] ${firstColumnClass}`}
+        className={`bg-white border-r border-b border-gray-200 px-2 py-2 min-w-[100px] ${firstColumnClass}`}
       >
         <ElementValue
           title={value.title}
@@ -30,7 +30,7 @@ const Cell = ({ value, isFirstColumn }: CellProps) => {
 
   return (
     <td
-      className={`py-2 bg-white border border-gray-200 text-center ${firstColumnClass}`}
+      className={`py-2 bg-white border-r border-b border-gray-200 text-center ${firstColumnClass}`}
     >
       {typeof value === "boolean" ? (value ? "✅" : "❌") : value}
     </td>

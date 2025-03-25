@@ -12,8 +12,8 @@ const Sidebar = ({
 }) => {
   return (
     <div
-      className={`fixed left-0 top-16 h-[calc(100vh-4rem)] z-30 bg-gray-800 md:w-[100px] w-full transition-transform transform
-    ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
+      className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-gray-800 md:w-[100px] w-full transition-transform transform
+    ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 z-30`}
     >
       <div className="md:w-[132px] w-full bg-gray-900 text-white h-full p-4 flex justify-center md:block">
         <nav>

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 const Header = ({ onSidebarToggle }: { onSidebarToggle: () => void }) => {
   return (
-    <header className="fixed top-0 left-0 w-full bg-gray-800 text-white z-30 shadow-md overflow-x-hidden">
+    <header className="fixed top-0 left-0 w-full bg-gray-800 text-white shadow-md overflow-x-hidden">
       <div className="flex items-center justify-between p-4">
         {/* Sidebar Toggle Button */}
         <button onClick={onSidebarToggle} className="text-white md:hidden">

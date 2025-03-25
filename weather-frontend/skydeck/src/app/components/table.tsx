@@ -16,14 +16,14 @@ const Table = ({ headers, data }: TableProps) => {
   return (
     <div>
       <div className="overflow-x-auto">
-        <table className="w-full border-collapse border-spacing-0">
+        <table className="w-full border-spacing-0 border-separate border border-gray-200">
           <thead>
             <tr className="bg-gray-800 text-white">
               {headers.map((header, index) => (
                 <th
                   key={index}
                   className={`py-2 px-4 text-center font-bold ${
-                    index === 0 ? "sticky left-0 bg-gray-800 z-10 " : ""
+                    index === 0 ? "sticky left-0 bg-gray-800 z-1 " : ""
                   }`}
                 >
                   {header}

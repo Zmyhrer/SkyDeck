@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import Header from "@/app/components/header"; // Import Header
-import Sidebar from "@/app/components/sidebar"; // Import Sidebar
-import "@/app/globals.css"; // Global styles
+import Header from "@/app/components/header";
+import Sidebar from "@/app/components/sidebar";
+import "@/app/globals.css";
 
 export default function RootLayout({
   children,
@@ -13,12 +13,22 @@ export default function RootLayout({
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   return (
-    <div className="h-screen">
-      {/* Sidebar */}
-      <Sidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
+    <html lang="en">
+      <body className="h-screen">
+        {/* Sidebar - Ensure it's properly positioned */}
+        <Sidebar
+          isOpen={isSidebarOpen}
+          onClose={() => setIsSidebarOpen(false)}
+        />
 
-      <Header onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
-      <main className="mt-[72px] flex-1 md:ml-[132px] p-4">{children}</main>
-    </div>
+        <div className="flex flex-col flex-1">
+          {/* Header */}
+          <Header onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
+
+          {/* Main Content */}
+          <main className="mt-[72px] md:ml-[132px] flex-1 p-4">{children}</main>
+        </div>
+      </body>
+    </html>
   );
 }

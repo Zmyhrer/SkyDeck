@@ -64,7 +64,7 @@ const page = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-semibold mb-4 flex justify-center md:justify-start">
+      <h1 className="text-2xl font-semibold mb-4 flex justify-center md:justify-start dark:bg-black dark:text-white ">
         Dashboard
       </h1>
 
