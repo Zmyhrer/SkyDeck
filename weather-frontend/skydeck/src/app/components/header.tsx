@@ -1,8 +1,8 @@
-import { useState } from "react";
+import Link from "next/link";
 
 const Header = ({ onSidebarToggle }: { onSidebarToggle: () => void }) => {
   return (
-    <header className="fixed top-0 left-0 w-full bg-gray-800 text-white z-30 shadow-md">
+    <header className="fixed top-0 left-0 w-full bg-gray-800 text-white z-30 shadow-md overflow-x-hidden">
       <div className="flex items-center justify-between p-4">
         {/* Sidebar Toggle Button */}
         <button onClick={onSidebarToggle} className="text-white md:hidden">
@@ -10,9 +10,12 @@ const Header = ({ onSidebarToggle }: { onSidebarToggle: () => void }) => {
         </button>
 
         {/* Title in the center */}
-        <h1 className="text-lg font-semibold absolute left-1/2 transform -translate-x-1/2">
+        <Link
+          href="/"
+          className="text-lg font-semibold absolute left-1/2 transform -translate-x-1/2"
+        >
           SkyDeck
-        </h1>
+        </Link>
 
         {/* Profile on the right */}
         <div className="ml-auto flex items-center space-x-4">

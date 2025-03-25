@@ -12,30 +12,45 @@ const Sidebar = ({
 }) => {
   return (
     <div
-      className={`fixed inset-0 mt-[71px] bg-gray-800 bg-opacity-50 md:bg-opacity-100 md:w-[100px] w-full transition-transform transform ${
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      } md:translate-x-0`}
+      className={`fixed left-0 top-16 h-[calc(100vh-4rem)] z-30 bg-gray-800 md:w-[100px] w-full transition-transform transform
+    ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}
     >
-      <div className="md:w-[132px] w-full bg-gray-900 text-white h-full p-4">
+      <div className="md:w-[132px] w-full bg-gray-900 text-white h-full p-4 flex justify-center md:block">
         <nav>
           <ul>
             <li>
-              <Link href="/" className="block py-2 hover:bg-gray-700">
+              <Link
+                href="/"
+                className="block py-2 hover:bg-gray-700"
+                onClick={onClose}
+              >
                 Home
               </Link>
             </li>
             <li>
-              <Link href="/dashboard" className="block py-2 hover:bg-gray-700">
+              <Link
+                href="/dashboard"
+                className="block py-2 hover:bg-gray-700"
+                onClick={onClose}
+              >
                 Dashboard
               </Link>
             </li>
             <li>
-              <Link href="#" className="block py-2 hover:bg-gray-700">
+              <Link
+                href="#"
+                className="block py-2 hover:bg-gray-700"
+                onClick={onClose}
+              >
                 Services
               </Link>
             </li>
             <li>
-              <Link href="#" className="block py-2 hover:bg-gray-700">
+              <Link
+                href="#"
+                className="block py-2 hover:bg-gray-700"
+                onClick={onClose}
+              >
                 Contact
               </Link>
             </li>
