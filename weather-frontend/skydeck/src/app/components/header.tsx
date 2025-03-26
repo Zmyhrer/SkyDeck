@@ -11,7 +11,7 @@ const Header = ({ onSidebarToggle }: { onSidebarToggle: () => void }) => {
 
         {/* Title in the center */}
         <Link
-          href="/"
+          href="/dashboard"
           className="text-lg font-semibold absolute left-1/2 transform -translate-x-1/2"
         >
           SkyDeck
