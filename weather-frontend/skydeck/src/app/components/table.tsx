@@ -1,5 +1,5 @@
 import React from "react";
-import Row from "@/app/components/row"; // Import Row component
+import ElementValue from "@/app/components/elementValue"; // Import ElementValue component
 
 type TableProps = {
   headers: string[]; // Array of header names
@@ -8,22 +8,41 @@ type TableProps = {
       | string
       | number
       | boolean
-      | { title: string; value: number; arrow: boolean };
+      | { title: string; value: number; arrowUp: boolean };
   }>; // Data array with objects, where keys are the same as header values, including objects for "E" columns
 };
 
 const Table = ({ headers, data }: TableProps) => {
+  const isElementValue = (
+    value:
+      | string
+      | number
+      | boolean
+      | { title: string; value: number; arrowUp: boolean }
+  ): value is { title: string; value: number; arrowUp: boolean } => {
+    return (
+      typeof value === "object" &&
+      value !== null &&
+      "title" in value &&
+      "value" in value
+    );
+  };
+
   return (
     <div>
-      <div className="overflow-x-auto">
-        <table className="w-full border-spacing-0 border-separate border border-gray-200">
-          <thead>
-            <tr className="bg-gray-800 text-white">
+      {/* Applying dynamic height with 40px margin at the bottom */}
+      <div
+        className="overflow-x-auto"
+        style={{ height: "calc(100vh - 176px)" }}
+      >
+        <table className="w-full border-spacing-0 border-separate">
+          <thead className="z-2 bg-gray-800 sticky top-0">
+            <tr className="text-white">
               {headers.map((header, index) => (
                 <th
                   key={index}
                   className={`py-2 px-4 text-center font-bold ${
-                    index === 0 ? "sticky left-0 bg-gray-800 z-1 " : ""
+                    index === 0 ? " bg-gray-800 sticky left-0 z-3" : ""
                   }`}
                 >
                   {header}
@@ -33,7 +52,39 @@ const Table = ({ headers, data }: TableProps) => {
           </thead>
           <tbody>
             {data.map((row, rowIndex) => (
-              <Row key={rowIndex} headers={headers} rowData={row} />
+              <tr key={rowIndex}>
+                {headers.map((header, index) => {
+                  const value = row[header];
+                  const isFirstColumn = index === 0;
+
+                  const firstColumnClass = isFirstColumn
+                    ? "sticky left-0 bg-white z-1 border-l-2 border-t border-b border-r border-gray-200"
+                    : "border border-gray-200";
+
+                  return (
+                    <td
+                      key={index}
+                      className={`py-2 px-2 bg-white text-center ${firstColumnClass}`}
+                    >
+                      {isElementValue(value) ? (
+                        <ElementValue
+                          title={value.title}
+                          value={value.value}
+                          arrowUp={value.arrowUp}
+                        />
+                      ) : typeof value === "boolean" ? (
+                        value ? (
+                          "✅"
+                        ) : (
+                          "❌"
+                        )
+                      ) : (
+                        value
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
             ))}
           </tbody>
         </table>

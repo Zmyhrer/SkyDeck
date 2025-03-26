@@ -3,10 +3,10 @@ import React from "react";
 type PageProps = {
   title: string;
   value: number;
-  arrow: boolean;
+  arrowUp: boolean;
 };
 
-const ElementValue = ({ title, value, arrow }: PageProps) => {
+const ElementValue = ({ title, value, arrowUp }: PageProps) => {
   return (
     <div className="flex flex-col items-center w-full">
       <div className="w-full text-center">{title}</div>
@@ -14,7 +14,7 @@ const ElementValue = ({ title, value, arrow }: PageProps) => {
       <div className="flex flex-row justify-center items-center w-full">
         <div className="text-md mr-2">{value}</div>
 
-        {arrow && (
+        {arrowUp && (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-4 h-4 text-red-500"
@@ -30,7 +30,7 @@ const ElementValue = ({ title, value, arrow }: PageProps) => {
             />
           </svg>
         )}
-        {!arrow && (
+        {!arrowUp && (
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="w-4 h-4 text-green-500"

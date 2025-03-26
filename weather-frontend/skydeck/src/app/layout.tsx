@@ -14,7 +14,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className="h-screen">
+      <body className="overflow-hidden h-screen">
         {/* Sidebar - Ensure it's properly positioned */}
         <Sidebar
           isOpen={isSidebarOpen}

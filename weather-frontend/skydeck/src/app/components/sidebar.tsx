@@ -3,6 +3,17 @@
 import Link from "next/link";
 import React from "react";
 
+const links = [
+  {
+    name: "Home",
+    href: "/",
+  },
+  {
+    name: "Dashboard",
+    href: "/dashboard",
+  },
+];
+
 const Sidebar = ({
   isOpen,
   onClose,
@@ -12,48 +23,23 @@ const Sidebar = ({
 }) => {
   return (
     <div
-      className={`fixed left-0 top-16 h-[calc(100vh-4rem)] bg-gray-800 md:w-[100px] w-full transition-transform transform
-    ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 z-30`}
+      className={`fixed left-0 top-[72px] h-[calc(100vh-4rem)] bg-gray-800 md:w-[100px] w-full transition-transform transform
+    ${isOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 z-4`}
     >
       <div className="md:w-[132px] w-full bg-gray-900 text-white h-full p-4 flex justify-center md:block">
         <nav>
           <ul>
-            <li>
-              <Link
-                href="/"
-                className="block py-2 hover:bg-gray-700"
-                onClick={onClose}
-              >
-                Home
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="/dashboard"
-                className="block py-2 hover:bg-gray-700"
-                onClick={onClose}
-              >
-                Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="#"
-                className="block py-2 hover:bg-gray-700"
-                onClick={onClose}
-              >
-                Services
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="#"
-                className="block py-2 hover:bg-gray-700"
-                onClick={onClose}
-              >
-                Contact
-              </Link>
-            </li>
+            {links.map((link, index) => (
+              <li key={index}>
+                <Link
+                  href={link.href}
+                  className="block py-2 px-2 hover:bg-gray-700 hover:rounded"
+                  onClick={onClose}
+                >
+                  {link.name}
+                </Link>
+              </li>
+            ))}
           </ul>
         </nav>
       </div>
