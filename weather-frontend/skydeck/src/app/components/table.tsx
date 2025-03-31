@@ -1,15 +1,16 @@
 import React from "react";
-import ElementValue from "@/app/components/elementValue"; // Import ElementValue component
+import ElementValue from "@/app/components/elementValue";
+import Link from "next/link";
 
 type TableProps = {
-  headers: string[]; // Array of header names
+  headers: string[];
   data: Array<{
     [key: string]:
       | string
       | number
       | boolean
       | { title: string; value: number; arrowUp: boolean };
-  }>; // Data array with objects, where keys are the same as header values, including objects for "E" columns
+  }>;
 };
 
 const Table = ({ headers, data }: TableProps) => {
@@ -30,7 +31,6 @@ const Table = ({ headers, data }: TableProps) => {
 
   return (
     <div>
-      {/* Applying dynamic height with 40px margin at the bottom */}
       <div
         className="overflow-x-auto"
         style={{ height: "calc(100vh - 176px)" }}
@@ -52,39 +52,44 @@ const Table = ({ headers, data }: TableProps) => {
           </thead>
           <tbody>
             {data.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {headers.map((header, index) => {
-                  const value = row[header];
-                  const isFirstColumn = index === 0;
+              <Link
+                key={rowIndex}
+                href={`/decks/elements/${rowIndex + 1}`}
+                className="contents"
+              >
+                <tr className="hover:bg-gray-100">
+                  {headers.map((header, index) => {
+                    const value = row[header];
+                    const isFirstColumn = index === 0;
+                    const firstColumnClass = isFirstColumn
+                      ? "sticky left-0 bg-white z-1 border-l-2 border-t border-b border-r border-gray-200"
+                      : "border border-gray-200";
 
-                  const firstColumnClass = isFirstColumn
-                    ? "sticky left-0 bg-white z-1 border-l-2 border-t border-b border-r border-gray-200"
-                    : "border border-gray-200";
-
-                  return (
-                    <td
-                      key={index}
-                      className={`py-2 px-2 bg-white text-center ${firstColumnClass}`}
-                    >
-                      {isElementValue(value) ? (
-                        <ElementValue
-                          title={value.title}
-                          value={value.value}
-                          arrowUp={value.arrowUp}
-                        />
-                      ) : typeof value === "boolean" ? (
-                        value ? (
-                          "✅"
+                    return (
+                      <td
+                        key={index}
+                        className={`py-2 px-2 bg-white text-center ${firstColumnClass}`}
+                      >
+                        {isElementValue(value) ? (
+                          <ElementValue
+                            title={value.title}
+                            value={value.value}
+                            arrowUp={value.arrowUp}
+                          />
+                        ) : typeof value === "boolean" ? (
+                          value ? (
+                            "✅"
+                          ) : (
+                            "❌"
+                          )
                         ) : (
-                          "❌"
-                        )
-                      ) : (
-                        value
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
+                          value
+                        )}
+                      </td>
+                    );
+                  })}
+                </tr>
+              </Link>
             ))}
           </tbody>
         </table>

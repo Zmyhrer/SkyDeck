@@ -316,42 +316,15 @@ const page = () => {
     },
   ];
 
-  const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    console.log(e); // Logs the event object with all its details
-    alert("Button clicked");
-  };
-
   return (
     <div className="">
       <div className="flex justify-between">
         <h1 className="text-2xl font-semibold mb-4 flex justify-center md:justify-start  dark:bg-black dark:text-purple-50 ">
-          Table
+          Decks
         </h1>
-        <div className="">
-          <ul className="flex flex-row justify-between items">
-            <button
-              className="bg-gray-800 text-white text-center rounded px-2 py-1 w-[70px]"
-              onClick={handleClick}
-            >
-              Current
-            </button>
-            <button
-              className="ml-[10px] bg-gray-800 text-white text-center rounded px-2 py-1 w-[70px]"
-              onClick={handleClick}
-            >
-              Hourly
-            </button>
-            <button
-              className="ml-[10px] bg-gray-800 text-white text-center rounded px-2 py-1 w-[70px]"
-              onClick={handleClick}
-            >
-              Daily
-            </button>
-          </ul>
-        </div>
       </div>
 
-      <div className="">
+      <div className="border border-gray-200">
         <Table headers={headers} data={data} />
       </div>
     </div>

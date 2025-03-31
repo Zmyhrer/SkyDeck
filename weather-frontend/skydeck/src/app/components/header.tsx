@@ -18,15 +18,14 @@ const Header = ({ onSidebarToggle }: { onSidebarToggle: () => void }) => {
         </Link>
 
         {/* Profile on the right */}
-        <div className="ml-auto flex items-center space-x-4">
+        <Link href={"/profile"} className="ml-auto flex items-center space-x-4">
           <img
-            src="https://via.placeholder.com/40" // Placeholder for profile image
+            src="https://picsum.photos/200/200?random=1" // Placeholder for profile image
             alt="Profile"
             className="w-10 h-10 rounded-full"
           />
           <span className="text-white hidden md:block">John Doe</span>{" "}
-          {/* Placeholder for username */}
-        </div>
+        </Link>
       </div>
     </header>
   );

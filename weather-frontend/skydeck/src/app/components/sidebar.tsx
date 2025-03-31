@@ -9,8 +9,8 @@ const links = [
     href: "/dashboard",
   },
   {
-    name: "Table",
-    href: "/table",
+    name: "Decks",
+    href: "/decks",
   },
 ];
 
