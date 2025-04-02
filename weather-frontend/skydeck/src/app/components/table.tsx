@@ -1,10 +1,11 @@
 import React from "react";
 import ElementValue from "@/app/components/elementValue";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 type TableProps = {
   headers: string[];
   data: Array<{
+    id: number;
     [key: string]:
       | string
       | number
@@ -14,19 +15,10 @@ type TableProps = {
 };
 
 const Table = ({ headers, data }: TableProps) => {
-  const isElementValue = (
-    value:
-      | string
-      | number
-      | boolean
-      | { title: string; value: number; arrowUp: boolean }
-  ): value is { title: string; value: number; arrowUp: boolean } => {
-    return (
-      typeof value === "object" &&
-      value !== null &&
-      "title" in value &&
-      "value" in value
-    );
+  const router = useRouter();
+
+  const handleRowClick = (rowIndex: number) => {
+    router.push(`/decks/elements/${rowIndex}`);
   };
 
   return (
@@ -42,7 +34,7 @@ const Table = ({ headers, data }: TableProps) => {
                 <th
                   key={index}
                   className={`py-2 px-4 text-center font-bold ${
-                    index === 0 ? " bg-gray-800 sticky left-0 z-3" : ""
+                    index === 0 ? "bg-gray-800 sticky left-0 z-3" : ""
                   }`}
                 >
                   {header}
@@ -51,45 +43,46 @@ const Table = ({ headers, data }: TableProps) => {
             </tr>
           </thead>
           <tbody>
-            {data.map((row, rowIndex) => (
-              <Link
-                key={rowIndex}
-                href={`/decks/elements/${rowIndex + 1}`}
-                className="contents"
+            {data.map((row) => (
+              <tr
+                className="hover:bg-gray-100"
+                onClick={() => handleRowClick(row.id)}
+                key={row.id}
               >
-                <tr className="hover:bg-gray-100">
-                  {headers.map((header, index) => {
-                    const value = row[header];
-                    const isFirstColumn = index === 0;
-                    const firstColumnClass = isFirstColumn
-                      ? "sticky left-0 bg-white z-1 border-l-2 border-t border-b border-r border-gray-200"
-                      : "border border-gray-200";
+                {headers.map((header, index) => {
+                  const value = header in row ? row[header] : undefined;
+                  const isFirstColumn = index === 0;
+                  const firstColumnClass = isFirstColumn
+                    ? "sticky left-0 bg-white z-1 border-l-2 border-t border-b border-r border-gray-200"
+                    : "border border-gray-200";
 
-                    return (
-                      <td
-                        key={index}
-                        className={`py-2 px-2 bg-white text-center ${firstColumnClass}`}
-                      >
-                        {isElementValue(value) ? (
-                          <ElementValue
-                            title={value.title}
-                            value={value.value}
-                            arrowUp={value.arrowUp}
-                          />
-                        ) : typeof value === "boolean" ? (
-                          value ? (
-                            "✅"
-                          ) : (
-                            "❌"
-                          )
+                  return (
+                    <td
+                      key={index}
+                      className={`py-2 px-2 bg-white text-center ${firstColumnClass}`}
+                    >
+                      {typeof value === "object" &&
+                      value !== null &&
+                      "title" in value &&
+                      "value" in value ? (
+                        <ElementValue
+                          title={value.title}
+                          value={value.value}
+                          arrowUp={value.arrowUp}
+                        />
+                      ) : typeof value === "boolean" ? (
+                        value ? (
+                          "✅"
                         ) : (
-                          value
-                        )}
-                      </td>
-                    );
-                  })}
-                </tr>
-              </Link>
+                          "❌"
+                        )
+                      ) : (
+                        value
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
             ))}
           </tbody>
         </table>

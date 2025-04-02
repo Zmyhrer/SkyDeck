@@ -1,11 +1,9 @@
 "use client";
 
 import React from "react";
-import Card from "@/app/components/dashboard_card"; // Assuming the Card component is in this path
+import Card from "@/app/components/dashboard_card";
 
-// Dashboard layout with absolute positioning
 const Dashboard: React.FC = () => {
-  // Initialize weather data as a JSON object
   const weatherReport = {
     forecast: [
       { time: "now", weather: "Rain", percentage: "20%" },
@@ -36,7 +34,6 @@ const Dashboard: React.FC = () => {
         left={"0px"}
       >
         <div className="flex">
-          {/* Left Section with Arrow and Weather Data */}
           <div className="flex basis-1/2 border-r text-center p-2 space-x-2 border-gray-200">
             <div className="flex justify-center items-center text-7xl">↓</div>
             <div className="flex flex-col text-left">
@@ -48,9 +45,7 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
 
-          {/* Right Section with Weather Details */}
           <div className="flex flex-col justify-center items-center basis-1/2 text-center p-6 space-y-6">
-            {/* High & Low Temps */}
             <div className="flex flex-col items-center space-y-2">
               <div className="text-3xl font-bold flex space-x-12">
                 <span>{weatherReport.details.low}°F</span>
@@ -62,10 +57,8 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
 
-            {/* Divider */}
             <div className="w-2/3 border-t border-gray-300"></div>
 
-            {/* Sunrise & Sunset */}
             <div className="flex flex-col items-center space-y-2">
               <div className="text-3xl font-semibold flex space-x-12">
                 <span className="">{weatherReport.details.sunUp}</span>

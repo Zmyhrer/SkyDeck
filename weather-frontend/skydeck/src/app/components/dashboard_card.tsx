@@ -6,7 +6,7 @@ type CardProps = {
   size: string;
   top: string;
   left: string;
-  children: React.ReactNode; // This allows dynamic content as children
+  children: React.ReactNode;
 };
 
 const Card: React.FC<CardProps> = ({ title, size, top, left, children }) => {
@@ -18,7 +18,7 @@ const Card: React.FC<CardProps> = ({ title, size, top, left, children }) => {
       <h3 className="text-lg font-semibold text-center m-1 border-b border-gray200">
         {title}
       </h3>
-      <div>{children}</div> {/* Render children dynamically */}
+      <div>{children}</div>
     </div>
   );
 };
