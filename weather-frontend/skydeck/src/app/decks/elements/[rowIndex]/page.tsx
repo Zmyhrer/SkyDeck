@@ -1,103 +1,154 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { TrashIcon } from "@heroicons/react/24/solid";
 import Dropdown from "@/app/components/dropdown";
-import { useLocalStorage } from "@/app/hooks/useLocalStorage";
-
-type Element = {
-  id: number;
-  name: string;
-};
+import decksData from "@/data/decks.json";
 
 const ElementDetail = () => {
   const { rowIndex } = useParams();
-
   const index = Number(rowIndex) - 1;
 
-  const [data, setData] = useLocalStorage<Element[]>("elementsData", [
-    { id: 1, name: "Hydrogen" },
-    { id: 2, name: "Helium" },
-    { id: 3, name: "Lithium" },
-    { id: 4, name: "Uranium" },
-  ]);
-
-  if (!data) {
-    return <p>Loading...</p>;
-  }
-
-  const handleNameChange = (id: number, newName: string) => {
-    setData((prevData) => {
-      if (!prevData) return [];
-
-      return prevData.map((item) =>
-        item.id === id ? { ...item, name: newName } : item
-      );
-    });
-  };
-
-  if (isNaN(index) || index < 0 || index >= data.length) {
-    return <p>Element not found</p>;
-  }
-
-  const element = data[index];
+  const [deckName, setDeckName] = useState(decksData.data[index].deckName);
+  const [elements, setElements] = useState(decksData.data[index].elements);
 
   const operatorOptions = ["<", "<=", "=", ">=", ">"];
   const weatherOptions = [
-    "Wind speed",
-    "Temperature",
-    "Humidity",
-    "Pressure",
-    "Precipitation",
+    { title: "Wind speed", unit: "mph" },
+    { title: "Temperature", unit: "°F" },
+    { title: "Humidity", unit: "%" },
+    { title: "Pressure", unit: "hPa" },
+    { title: "Precipitation", unit: "in" },
   ];
 
-  const handleDelete = () => {
-    if (window.confirm(`Are you sure you want to delete ${element.name}?`)) {
-      const newData = data.filter((item) => item.id !== element.id);
-      setData(newData);
+  const updateElement = (
+    i: number,
+    key: "title" | "operator" | "value",
+    newValue: string | number
+  ) => {
+    setElements((prev) =>
+      prev.map((el, idx) => (idx === i ? { ...el, [key]: newValue } : el))
+    );
+  };
+
+  const handleDeleteDeck = () => {
+    console.log("Deleted Deck");
+  };
+
+  const handleDeleteElement = (indexToDelete: number) => {
+    setElements((prev) => prev.filter((_, i) => i !== indexToDelete));
+  };
+
+  const handleSaveDeck = async () => {
+    try {
+      const res = await fetch("/api/updateDeck", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          index,
+          deckName,
+          elements,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        console.log("Deck saved successfully!");
+      } else {
+        console.error("Failed to save deck.");
+      }
+    } catch (err) {
+      console.error("Error saving deck:", err);
     }
   };
 
   return (
-    <div>
-      <div className="flex justify-between">
-        <h1 className="text-2xl font-semibold mb-4 flex justify-center md:justify-start dark:bg-black dark:text-purple-50">
+    <div className="p-4">
+      {/* Deck title + delete */}
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-semibold">
           <input
             type="text"
-            value={element.name}
-            onChange={(e) => handleNameChange(element.id, e.target.value)}
-            className="border p-2 rounded-lg"
+            value={deckName}
+            className="border p-2 rounded-lg dark:bg-gray-800 dark:text-white"
+            onChange={(e) => setDeckName(e.target.value)}
           />
         </h1>
+        <button
+          className="bg-red-500 w-20 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 disabled:bg-red-300"
+          onClick={handleDeleteDeck}
+        >
+          Delete
+        </button>
       </div>
 
-      <div className="border border-gray-200">
-        <div className="flex items-center space-x-4 h-[30px] overflow-y-hidden">
-          <div className="flex-9/12 border h-full border-black rounded">
-            <Dropdown
-              label="Weather Conditions"
-              options={weatherOptions}
-              menuWidth="w-[70px]"
-            />
-          </div>
-          <div className="w-[90px] h-full border border-black rounded">
-            <Dropdown
-              label="="
-              options={operatorOptions}
-              menuWidth="w-[50px]"
-            />
-          </div>
-          <input className="flex w-[50px] h-full border border-black rounded px-2" />
+      {/* Element rows */}
+      <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 space-y-3">
+        {elements.map((element, i) => {
+          const selectedWeather = weatherOptions.find(
+            (opt) => opt.title === element.title
+          );
+          const unit = selectedWeather ? selectedWeather.unit : "";
 
-          <button
-            className="w-[50px] h-full flex justify-center bg-red-400 p-1 text-white rounded hover:bg-red-700 text-center"
-            onClick={handleDelete}
-          >
-            <TrashIcon className="w-5 h-5" />
-          </button>
-        </div>
-        <div className="">Add More</div>
+          return (
+            <div key={`element-${i}`} className="flex items-center gap-3">
+              {/* Weather dropdown */}
+              <div className="flex-1 h-10">
+                <Dropdown
+                  label={element.title}
+                  options={weatherOptions.map((opt) => opt.title)}
+                  value={element.title}
+                  onChange={(value: string) => updateElement(i, "title", value)}
+                />
+              </div>
+
+              {/* Operator dropdown */}
+              <div className="w-24 h-10">
+                <Dropdown
+                  label="Operator"
+                  options={operatorOptions}
+                  value={element.operator}
+                  onChange={(value: string) =>
+                    updateElement(i, "operator", value)
+                  }
+                />
+              </div>
+
+              {/* Numeric input */}
+              <input
+                className="w-20 h-10 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 dark:bg-gray-800"
+                value={element.value}
+                type="number"
+                onChange={(e) =>
+                  updateElement(i, "value", Number(e.target.value))
+                }
+              />
+
+              {/* Unit display */}
+              <p className="w-10 text-center">{unit}</p>
+
+              {/* Delete button */}
+              <button
+                className="p-2 text-red-500 hover:text-red-700 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50"
+                onClick={() => handleDeleteElement(i)}
+              >
+                <TrashIcon className="w-5 h-5" />
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Save button */}
+      <div className="w-full flex items-end justify-end mt-4">
+        <button
+          className="bg-blue-500 w-20 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition duration-200 disabled:bg-blue-300"
+          onClick={handleSaveDeck}
+        >
+          Save
+        </button>
       </div>
     </div>
   );

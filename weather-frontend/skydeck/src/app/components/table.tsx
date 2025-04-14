@@ -2,19 +2,25 @@ import React from "react";
 import ElementValue from "@/app/components/elementValue";
 import { useRouter } from "next/navigation";
 
-type TableProps = {
-  headers: string[];
-  data: Array<{
-    id: number;
-    [key: string]:
-      | string
-      | number
-      | boolean
-      | { title: string; value: number; arrowUp: boolean };
-  }>;
+type Metric = {
+  title: string;
+  operator: string;
+  value: number;
+  arrowUp: boolean;
 };
 
-const Table = ({ headers, data }: TableProps) => {
+type TableRow = {
+  id: number;
+  [key: string]: string | number | boolean | Metric[] | undefined;
+};
+
+type TableProps = {
+  headersKey: string[];
+  headersLabel: string[];
+  data: TableRow[];
+};
+
+const Table = ({ headersKey, headersLabel, data }: TableProps) => {
   const router = useRouter();
 
   const handleRowClick = (rowIndex: number) => {
@@ -22,71 +28,66 @@ const Table = ({ headers, data }: TableProps) => {
   };
 
   return (
-    <div>
-      <div
-        className="overflow-x-auto"
-        style={{ height: "calc(100vh - 176px)" }}
-      >
-        <table className="w-full border-spacing-0 border-separate">
-          <thead className="z-2 bg-gray-800 sticky top-0">
-            <tr className="text-white">
-              {headers.map((header, index) => (
-                <th
-                  key={index}
-                  className={`py-2 px-4 text-center font-bold ${
-                    index === 0 ? "bg-gray-800 sticky left-0 z-3" : ""
-                  }`}
-                >
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((row) => (
-              <tr
-                className="hover:bg-gray-100"
-                onClick={() => handleRowClick(row.id)}
-                key={row.id}
+    <div className="overflow-x-auto" style={{ height: "calc(100vh - 176px)" }}>
+      <table className="min-w-max table-fixed border-spacing-0 border-separate">
+        <thead className="z-2 bg-gray-800 sticky top-0">
+          <tr className="text-white">
+            {headersLabel.map((header, index) => (
+              <th
+                key={index}
+                className={`py-2 px-4 text-center font-bold w-[100px] min-w-[100px] max-w-[100px] truncate ${
+                  index === 0 ? "bg-gray-800 sticky left-0 z-3" : ""
+                }`}
               >
-                {headers.map((header, index) => {
-                  const value = header in row ? row[header] : undefined;
-                  const isFirstColumn = index === 0;
-                  const firstColumnClass = isFirstColumn
-                    ? "sticky left-0 bg-white z-1 border-l-2 border-t border-b border-r border-gray-200"
-                    : "border border-gray-200";
-
-                  return (
-                    <td
-                      key={index}
-                      className={`py-2 px-2 bg-white text-center ${firstColumnClass}`}
-                    >
-                      {typeof value === "object" &&
-                      value !== null &&
-                      "title" in value &&
-                      "value" in value ? (
-                        <ElementValue
-                          title={value.title}
-                          value={value.value}
-                          arrowUp={value.arrowUp}
-                        />
-                      ) : typeof value === "boolean" ? (
-                        value ? (
-                          "✅"
-                        ) : (
-                          "❌"
-                        )
-                      ) : (
-                        value
-                      )}
-                    </td>
-                  );
-                })}
-              </tr>
+                {header}
+              </th>
             ))}
-          </tbody>
-        </table>
-      </div>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((row) => (
+            <tr
+              key={row.id}
+              className="hover:bg-gray-100 cursor-pointer"
+              onClick={() => handleRowClick(row.id)}
+            >
+              {headersKey.map((header, index) => {
+                const value = row[header];
+                const isFirstColumn = index === 0;
+                const firstColumnClass = isFirstColumn
+                  ? "sticky left-0 bg-white z-1 border-l-2 border-t border-b border-r border-gray-200"
+                  : "border border-gray-200";
+
+                // If it's a Metric array (e.g., ElementValue)
+                if (Array.isArray(value)) {
+                  return value.map((metric, idx) => (
+                    <td
+                      key={`${header}-${idx}`}
+                      className={`py-2 px-2 w-[150px] overflow-hidden text-center align-center ${firstColumnClass}`}
+                    >
+                      <ElementValue
+                        title={`${metric.title}`}
+                        value={metric.value}
+                        arrowUp={metric.arrowUp}
+                      />
+                    </td>
+                  ));
+                }
+
+                // If it's a plain value (string, number, boolean)
+                return (
+                  <td
+                    key={index}
+                    className={`py-2 px-2 w-[150px] overflow-hidden text-center align-center ${firstColumnClass}`}
+                  >
+                    {typeof value === "boolean" ? (value ? "✅" : "❌") : value}
+                  </td>
+                );
+              })}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

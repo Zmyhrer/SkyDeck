@@ -1,0 +1,108 @@
+{
+  "metadata": {
+    "location": "New York, NY",
+    "latitude": 40.7128,
+    "longitude": -74.006,
+    "elevation": 10,
+    "units": "metric",
+    "last_updated": "2023-07-20T14:30:00Z"
+  },
+  "current": {
+    "timestamp": "2023-07-20T14:30:00Z",
+    "temperature": 28.5,
+    "feels_like": 30.2,
+    "humidity": 65,
+    "pressure": 1012,
+    "wind_speed": 12.3,
+    "wind_direction": 215,
+    "wind_gust": 18.5,
+    "precipitation": {
+      "last_hour": 2.1,
+      "type": "rain"
+    },
+    "visibility": 12.4,
+    "uv_index": 7,
+    "solar_radiation": 850,
+    "cloud_cover": 40,
+    "dew_point": 18.7,
+    "condition": "Partly cloudy"
+  },
+  "hourly": [
+    {
+      "timestamp": "2023-07-20T14:00:00Z",
+      "temperature": 28.0,
+      "humidity": 67,
+      "pressure": 1013,
+      "wind_speed": 11.8,
+      "precipitation_probability": 15,
+      "uv_index": 6,
+      "solar_radiation": 820
+    },
+    {
+      "timestamp": "2023-07-20T15:00:00Z",
+      "temperature": 28.5,
+      "humidity": 65,
+      "pressure": 1012,
+      "wind_speed": 12.3,
+      "precipitation_probability": 20,
+      "uv_index": 7,
+      "solar_radiation": 850
+    }
+  ],
+  "daily": [
+    {
+      "date": "2023-07-20",
+      "temperature": {
+        "min": 22.3,
+        "max": 29.8,
+        "morning": 23.5,
+        "afternoon": 29.8,
+        "evening": 25.1,
+        "night": 22.3
+      },
+      "humidity": {
+        "average": 68,
+        "min": 55,
+        "max": 82
+      },
+      "pressure": {
+        "average": 1013,
+        "min": 1011,
+        "max": 1015
+      },
+      "wind_speed": {
+        "average": 11.2,
+        "max": 18.5,
+        "gust": 22.3
+      },
+      "precipitation": {
+        "total": 2.5,
+        "probability": 30,
+        "type": "rain"
+      },
+      "visibility": {
+        "average": 12.0,
+        "min": 8.5
+      },
+      "uv_index": {
+        "max": 7,
+        "peak_hour": "13:00"
+      },
+      "solar_radiation": {
+        "total": 12500,
+        "peak": 950
+      },
+      "sunrise": "2023-07-20T05:45:00Z",
+      "sunset": "2023-07-20T20:15:00Z"
+    }
+  ],
+  "alerts": [
+    {
+      "event": "Heat Advisory",
+      "start": "2023-07-20T12:00:00Z",
+      "end": "2023-07-20T19:00:00Z",
+      "description": "Heat index values up to 38°C expected.",
+      "severity": "moderate"
+    }
+  ]
+}
