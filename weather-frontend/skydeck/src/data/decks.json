@@ -7,307 +7,162 @@
   "data": [
     {
       "id": 1,
-      "deckName": "New Name",
+      "deckName": "Raining?",
       "boolean": true,
       "elements": [
         {
-          "title": "Wind speed",
-          "operator": "<",
-          "value": 200,
-          "arrowUp": false
-        },
-        {
-          "title": "Humidity",
-          "operator": ">",
-          "value": 300,
-          "arrowUp": true
-        },
-        {
           "title": "Temperature",
           "operator": "<",
-          "value": 400,
-          "arrowUp": false
+          "value": "2.8",
+          "arrowUp": false,
+          "unit": "°C"
         },
         {
           "title": "Precipitation",
           "operator": ">",
-          "value": 500,
-          "arrowUp": true
+          "value": "5.2",
+          "arrowUp": true,
+          "unit": "mm"
         },
         {
           "title": "Visibility",
           "operator": "<",
           "value": 600,
-          "arrowUp": false
+          "arrowUp": false,
+          "unit": "meters"
         },
         {
           "title": "UV Index",
           "operator": ">",
           "value": 700,
-          "arrowUp": true
+          "arrowUp": true,
+          "unit": "index"
         }
       ]
     },
     {
-      "id": 2,
-      "deckName": "Deck 2",
+      "id": 7,
+      "deckName": "Early Fog",
       "boolean": false,
       "elements": [
         {
-          "title": "Temperature",
-          "operator": "<",
-          "value": 50,
-          "arrowUp": false
-        },
-        {
-          "title": "Pressure",
-          "operator": ">",
-          "value": 150,
-          "arrowUp": true
-        },
-        {
-          "title": "Humidity",
-          "operator": "<",
-          "value": 250,
-          "arrowUp": false
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 350,
-          "arrowUp": true
-        },
-        {
-          "title": "Precipitation",
-          "operator": "<",
-          "value": 450,
-          "arrowUp": false
-        },
-        {
           "title": "Visibility",
-          "operator": ">",
-          "value": 550,
-          "arrowUp": true
+          "operator": "<",
+          "value": "79",
+          "arrowUp": false,
+          "unit": "miles"
         },
         {
-          "title": "UV Index",
+          "title": "Wind speed",
           "operator": "<",
-          "value": 650,
-          "arrowUp": false
+          "value": 0,
+          "arrowUp": false,
+          "unit": "mph"
         }
       ]
     },
     {
-      "id": 3,
-      "deckName": "Cassie Wifie",
+      "id": 8,
+      "deckName": "Storm Watch",
       "boolean": true,
       "elements": [
         {
-          "title": "Temperature",
-          "operator": "<",
-          "value": 20,
-          "arrowUp": false
+          "title": "Precipitation",
+          "operator": ">",
+          "value": 900,
+          "arrowUp": true,
+          "unit": "mm"
+        },
+        {
+          "title": "Wind Speed",
+          "operator": ">",
+          "value": 70,
+          "arrowUp": true,
+          "unit": "km/h"
         },
         {
           "title": "Pressure",
-          "operator": ">",
-          "value": 120,
-          "arrowUp": true
-        },
-        {
-          "title": "Humidity",
           "operator": "<",
-          "value": 220,
-          "arrowUp": false
+          "value": 980,
+          "arrowUp": false,
+          "unit": "hPa"
         },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        },
-        {
-          "title": "Wind Speed",
-          "operator": ">",
-          "value": 320,
-          "arrowUp": true
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "deckName": "Deck 4",
-      "boolean": false,
-      "elements": [
         {
           "title": "Temperature",
           "operator": "<",
           "value": 10,
-          "arrowUp": false
+          "arrowUp": false,
+          "unit": "°C"
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "deckName": "Sunshine Max",
+      "boolean": true,
+      "elements": [
+        {
+          "title": "UV Index",
+          "operator": ">",
+          "value": 9,
+          "arrowUp": true,
+          "unit": "index"
+        },
+        {
+          "title": "Visibility",
+          "operator": ">",
+          "value": 1000,
+          "arrowUp": true,
+          "unit": "meters"
+        },
+        {
+          "title": "Humidity",
+          "operator": "<",
+          "value": 30,
+          "arrowUp": false,
+          "unit": "%"
+        },
+        {
+          "title": "Temperature",
+          "operator": ">",
+          "value": 35,
+          "arrowUp": true,
+          "unit": "°C"
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "deckName": "Cool Breeze",
+      "boolean": false,
+      "elements": [
+        {
+          "title": "Wind Speed",
+          "operator": ">",
+          "value": 20,
+          "arrowUp": true,
+          "unit": "km/h"
+        },
+        {
+          "title": "Humidity",
+          "operator": "<",
+          "value": 60,
+          "arrowUp": false,
+          "unit": "%"
         },
         {
           "title": "Pressure",
           "operator": ">",
-          "value": 110,
-          "arrowUp": true
-        },
-        {
-          "title": "Humidity",
-          "operator": "<",
-          "value": 210,
-          "arrowUp": false
-        },
-        {
-          "title": "Wind Speed",
-          "operator": "<",
-          "value": 310,
-          "arrowUp": false
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "deckName": "Deck 5",
-      "boolean": true,
-      "elements": [
-        {
-          "title": "Temperature",
-          "operator": "<",
-          "value": 30,
-          "arrowUp": false
-        },
-        {
-          "title": "Pressure",
-          "operator": "<",
-          "value": 130,
-          "arrowUp": false
-        },
-        {
-          "title": "Humidity",
-          "operator": "<",
-          "value": 230,
-          "arrowUp": false
-        },
-        {
-          "title": "Wind Speed",
-          "operator": "<",
-          "value": 330,
-          "arrowUp": false
-        },
-        {
-          "title": "Precipitation",
-          "operator": "<",
-          "value": 430,
-          "arrowUp": false
-        },
-        {
-          "title": "Visibility",
-          "operator": "<",
-          "value": 530,
-          "arrowUp": false
+          "value": 1020,
+          "arrowUp": true,
+          "unit": "hPa"
         },
         {
           "title": "UV Index",
           "operator": "<",
-          "value": 630,
-          "arrowUp": false
-        },
-        {
-          "title": "Solar Radiation",
-          "operator": "<",
-          "value": 730,
-          "arrowUp": false
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "deckName": "Deck 6",
-      "boolean": true,
-      "elements": [
-        {
-          "title": "Temperature",
-          "operator": "<",
-          "value": 40,
-          "arrowUp": false
-        },
-        {
-          "title": "Pressure",
-          "operator": "<",
-          "value": 140,
-          "arrowUp": false
-        },
-        {
-          "title": "Humidity",
-          "operator": "<",
-          "value": 240,
-          "arrowUp": false
-        },
-        {
-          "title": "Wind Speed",
-          "operator": "<",
-          "value": 340,
-          "arrowUp": false
+          "value": 5,
+          "arrowUp": false,
+          "unit": "index"
         }
       ]
     }

@@ -10,7 +10,6 @@ type Metric = {
 };
 
 type TableRow = {
-  id: number;
   [key: string]: string | number | boolean | Metric[] | undefined;
 };
 
@@ -24,7 +23,8 @@ const Table = ({ headersKey, headersLabel, data }: TableProps) => {
   const router = useRouter();
 
   const handleRowClick = (rowIndex: number) => {
-    router.push(`/decks/elements/${rowIndex}`);
+    // Add 1 because your detail page seems to expect 1-based indexing
+    router.push(`/decks/elements/${rowIndex + 1}`);
   };
 
   return (
@@ -45,11 +45,11 @@ const Table = ({ headersKey, headersLabel, data }: TableProps) => {
           </tr>
         </thead>
         <tbody>
-          {data.map((row) => (
+          {data.map((row, rowIndex) => (
             <tr
-              key={row.id}
+              key={rowIndex}
               className="hover:bg-gray-100 cursor-pointer"
-              onClick={() => handleRowClick(row.id)}
+              onClick={() => handleRowClick(rowIndex)}
             >
               {headersKey.map((header, index) => {
                 const value = row[header];
@@ -58,7 +58,6 @@ const Table = ({ headersKey, headersLabel, data }: TableProps) => {
                   ? "sticky left-0 bg-white z-1 border-l-2 border-t border-b border-r border-gray-200"
                   : "border border-gray-200";
 
-                // If it's a Metric array (e.g., ElementValue)
                 if (Array.isArray(value)) {
                   return value.map((metric, idx) => (
                     <td
@@ -66,7 +65,7 @@ const Table = ({ headersKey, headersLabel, data }: TableProps) => {
                       className={`py-2 px-2 w-[150px] overflow-hidden text-center align-center ${firstColumnClass}`}
                     >
                       <ElementValue
-                        title={`${metric.title}`}
+                        title={metric.title}
                         value={metric.value}
                         arrowUp={metric.arrowUp}
                       />
@@ -74,7 +73,6 @@ const Table = ({ headersKey, headersLabel, data }: TableProps) => {
                   ));
                 }
 
-                // If it's a plain value (string, number, boolean)
                 return (
                   <td
                     key={index}

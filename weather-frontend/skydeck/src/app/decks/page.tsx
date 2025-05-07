@@ -2,10 +2,10 @@
 
 import React from "react";
 import Table from "@/app/components/table";
-import { headers, data } from "@/data/decks.json";
+import dataDecks from "@/data/decks.json";
 
 const page = () => {
-  const first10Elements = data.map((item) => {
+  const first10Elements = dataDecks.data.map((item) => {
     return {
       ...item,
       elements: item.elements.slice(0, 20),
@@ -33,7 +33,7 @@ const page = () => {
 
       <div className="border border-gray-200">
         <Table
-          headersKey={headers}
+          headersKey={dataDecks.headers}
           headersLabel={headerLabels}
           data={first10Elements}
         />
