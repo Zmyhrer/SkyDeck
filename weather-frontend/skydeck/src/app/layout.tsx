@@ -26,7 +26,7 @@ export default function RootLayout({
           <Header onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
 
           {/* Main Content */}
-          <main className="mt-[72px] md:ml-[132px] flex-1 md:p-4">
+          <main className="mt-[72px] md:ml-[132px] flex-1 md:p-4 bg-gray-100">
             {children}
           </main>
         </div>

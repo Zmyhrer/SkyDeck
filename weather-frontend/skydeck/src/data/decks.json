@@ -37,6 +37,13 @@
           "value": 700,
           "arrowUp": true,
           "unit": "index"
+        },
+        {
+          "title": "Wind speed",
+          "operator": "<",
+          "value": "40",
+          "arrowUp": false,
+          "unit": "mph"
         }
       ]
     },
