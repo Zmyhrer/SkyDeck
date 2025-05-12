@@ -1,9 +1,5 @@
 {
-  "headers": [
-    "deckName",
-    "boolean",
-    "elements"
-  ],
+  "headers": ["deckName", "boolean", "elements"],
   "data": [
     {
       "id": 1,

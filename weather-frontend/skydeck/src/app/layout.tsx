@@ -14,7 +14,7 @@ export default function RootLayout({
 
   return (
     <html lang="en">
-      <body className="overflow-hidden h-screen">
+      <body className="min-h-screen overflow-x-hidden">
         {/* Sidebar - Ensure it's properly positioned */}
         <Sidebar
           isOpen={isSidebarOpen}
@@ -26,7 +26,7 @@ export default function RootLayout({
           <Header onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
 
           {/* Main Content */}
-          <main className="mt-[72px] md:ml-[132px] flex-1 md:p-4 bg-gray-100">
+          <main className="mt-[72px] ml-0 md:ml-[132px] md:p-4 flex-1 overflow-x-hidden bg-gray-100">
             {children}
           </main>
         </div>

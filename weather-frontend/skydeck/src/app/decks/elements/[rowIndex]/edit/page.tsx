@@ -2,9 +2,9 @@
 
 import React, { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { TrashIcon } from "@heroicons/react/24/solid";
-import Dropdown from "@/app/components/dropdown";
+
 import decksData from "@/data/decks.json";
+import ElementRow from "@/app/components/elementRow";
 
 const ElementDetail = () => {
   const { rowIndex } = useParams();
@@ -114,19 +114,18 @@ const ElementDetail = () => {
 
   return (
     <div className="md:p-4">
-      {/* Deck title + delete */}
+      {/* Back + delete */}
       <div className="flex justify-between items-center mb-4 gap-4">
-        <h1 className="text-2xl font-semibold w-max-4">
-          <input
-            type="text"
-            value={deckName}
-            className="border p-2 w-full rounded-lg dark:bg-gray-800 dark:text-white"
-            onChange={(e) => setDeckName(e.target.value)}
-          />
-        </h1>
         <button
           type="button"
-          className="bg-red-500 w-1/5 min-w-[120px] text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 disabled:bg-red-300"
+          className="bg-gray-500 w-1/20 min-w-[120px] text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition duration-200"
+          onClick={() => router.back()}
+        >
+          Back
+        </button>
+        <button
+          type="button"
+          className="bg-red-500 w-1/20 min-w-[120px] text-white px-4 py-2 rounded-lg hover:bg-red-700 transition duration-200 disabled:bg-red-300"
           onClick={handleDeleteDeck}
         >
           Delete
@@ -135,51 +134,28 @@ const ElementDetail = () => {
 
       {/* Element rows */}
       <div className="border border-gray-200 w-full dark:border-gray-700 rounded-lg p-2 md:p-4 space-y-4">
-        {elements.map((element, i) => (
-          <div key={`element-${i}`} className="flex flex-col md:flex-row gap-2">
-            {/* Weather dropdown */}
-            <div className="w-full md:w-1/3">
-              <Dropdown
-                label={element.title}
-                options={weatherOptions.map((opt) => opt.weather)}
-                onChange={(value: string) => updateElement(i, "title", value)}
-                value={element.title}
-              />
-            </div>
-
-            {/* Operator, value, unit, delete */}
-            <div className="flex flex-row flex-wrap md:flex-nowrap gap-2 items-center md:w-2/3">
-              <div className="w-[90px]">
-                <Dropdown
-                  label="Operator"
-                  options={operatorOptions}
-                  value={element.operator}
-                  onChange={(value: string) =>
-                    updateElement(i, "operator", value)
-                  }
-                />
-              </div>
-
-              <input
-                className="w-[90px] h-10 border border-gray-300 dark:border-gray-600 rounded px-2 py-1 dark:bg-gray-800"
-                value={element.value}
-                type="number"
-                inputMode="decimal"
-                onChange={(e) => updateElement(i, "value", e.target.value)}
-              />
-
-              <p className="w-[50px] text-center">{element.unit || ""}</p>
-
-              <button
-                type="button"
-                className="p-2 text-red-500 hover:text-red-700 rounded-full hover:bg-red-100 dark:hover:bg-red-900/50"
-                onClick={() => handleDeleteElement(i)}
-              >
-                <TrashIcon className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
-        ))}
+        <h1 className="text-2xl font-semibold w-1/2">
+          <input
+            type="text"
+            maxLength={50}
+            value={deckName}
+            className="border p-2 w-full rounded-lg dark:bg-gray-800 dark:text-white"
+            onChange={(e) => setDeckName(e.target.value)}
+          />
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
+          {elements.map((element, i) => (
+            <ElementRow
+              key={`element-${i}`}
+              element={element}
+              index={i}
+              weatherOptions={weatherOptions}
+              operatorOptions={operatorOptions}
+              updateElement={updateElement}
+              handleDeleteElement={handleDeleteElement}
+            />
+          ))}
+        </div>
       </div>
 
       {/* Add More Button */}

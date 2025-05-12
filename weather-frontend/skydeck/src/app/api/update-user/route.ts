@@ -1,38 +1,38 @@
 import { NextResponse } from "next/server";
 import pool from "../../../lib/db";
-import bcrypt from "bcryptjs";
 
-export async function POST(req: Request) {
+export async function PUT(req: Request) {
   try {
-    const { username, email, password, unit_system } = await req.json();
+    const { user_id, unit_system } = await req.json();
 
-    if (!username || !email || !password || !unit_system) {
+    // Check if all required fields are provided
+    if (!user_id || !unit_system) {
       return NextResponse.json(
         { success: false, message: "All fields are required" },
         { status: 400 }
       );
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
+    // Update the user's unit system in the database
     const result = await pool.query(
-      "INSERT INTO users (username, email, password, unit_system) VALUES ($1, $2, $3, $4) RETURNING user_id",
-      [username, email, hashedPassword, unit_system]
+      "UPDATE users SET unit_system = $1 WHERE user_id = $2",
+      [unit_system, user_id]
     );
 
+    // If the update was successful, return the user's ID
     if (result.rows.length > 0) {
       return NextResponse.json(
         {
           success: true,
-          message: "User successfully added",
+          message: "User unit system successfully updated",
           user_id: result.rows[0].user_id,
         },
-        { status: 201 }
+        { status: 200 }
       );
     } else {
       return NextResponse.json(
-        { success: false, message: "Failed to add user" },
-        { status: 500 }
+        { success: false, message: "User not found or no changes made" },
+        { status: 404 } // Not found
       );
     }
   } catch (error) {
