@@ -1,17 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter, useParams } from "next/navigation";
-
-import decksData from "@/data/decks.json";
+import { useRouter } from "next/navigation";
 import ElementRow from "@/app/components/elementRow";
 
 const ElementDetail = () => {
-  const { rowIndex } = useParams();
-  const index = Number(rowIndex) - 1;
+  const [deckName, setDeckName] = useState("");
+  const [deckStatus] = useState(true); // Default to active
 
-  const [deckName, setDeckName] = useState(decksData.data[index].deckName);
-  const [elements, setElements] = useState(decksData.data[index].elements);
   const [isSaving, setIsSaving] = useState(false);
 
   const operatorOptions = ["<", "<=", "=", ">=", ">"];
@@ -27,26 +23,8 @@ const ElementDetail = () => {
 
   const router = useRouter();
 
-  const updateElement = (
-    i: number,
-    key: "title" | "operator" | "value",
-    newValue: string
-  ) => {
-    setElements((prev) =>
-      prev.map((el, idx) => {
-        if (idx !== i) return el;
-
-        const updatedEl = { ...el, [key]: newValue };
-
-        if (key === "title") {
-          const match = weatherOptions.find((opt) => opt.weather === newValue);
-          if (match) updatedEl.unit = match.unit;
-        }
-
-        return updatedEl;
-      })
-    );
-  };
+  // Get the user ID from session or context (this is just a placeholder)
+  const userId = "3"; // Replace with actual logic to get user ID
 
   const handleDeleteDeck = async () => {
     try {
@@ -68,33 +46,17 @@ const ElementDetail = () => {
     }
   };
 
-  const handleDeleteElement = (indexToDelete: number) => {
-    setElements((prev) => prev.filter((_, i) => i !== indexToDelete));
-  };
-
-  const handleAddElement = () => {
-    setElements((prev) => [
-      ...prev,
-      {
-        title: "Temperature",
-        operator: "<",
-        value: 0,
-        arrowUp: false,
-        unit: "°F",
-      },
-    ]);
-  };
-
   const handleSaveDeck = async () => {
     setIsSaving(true);
     try {
-      const res = await fetch("/api/updateDeck", {
+      // Call the API route to save the deck
+      const res = await fetch("/api/add-deck", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          index,
           deckName,
-          elements,
+          deckStatus, // Include deckStatus here
+          userId, // Include userId here
         }),
       });
 
@@ -102,6 +64,7 @@ const ElementDetail = () => {
 
       if (result.success) {
         console.log("Deck saved successfully!");
+        router.push(`/decks`); // Redirect to the saved deck's page using deck_id
       } else {
         console.error("Failed to save deck.");
       }
@@ -143,30 +106,6 @@ const ElementDetail = () => {
             onChange={(e) => setDeckName(e.target.value)}
           />
         </h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
-          {elements.map((element, i) => (
-            <ElementRow
-              key={`element-${i}`}
-              element={element}
-              index={i}
-              weatherOptions={weatherOptions}
-              operatorOptions={operatorOptions}
-              updateElement={updateElement}
-              handleDeleteElement={handleDeleteElement}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Add More Button */}
-      <div className="mt-4">
-        <button
-          type="button"
-          className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition duration-200"
-          onClick={handleAddElement}
-        >
-          Add More
-        </button>
       </div>
 
       {/* Save button */}

@@ -1,15 +1,18 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // to handle redirection
 
 const ProfilePage: React.FC = () => {
-  const [name, setName] = useState<string>("John Doe");
+  const [name] = useState<string>("John Doe");
   const [unitSystem, setUnitSystem] = useState<"US" | "EU">("US");
-  const [userId, setUserID] = useState("");
+  const [userId] = useState("");
 
   // State for feedback message
   const [message, setMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter(); // Next.js hook for navigation
 
   // Handle form submission
   const handleSubmit = async (e: React.FormEvent) => {
@@ -39,6 +42,15 @@ const ProfilePage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Handle logout functionality
+  const handleLogout = () => {
+    // Clear authentication token (from cookies or localStorage)
+    document.cookie = "auth_token=; Max-Age=0"; // Expire the cookie
+
+    // Redirect to login page
+    router.push("/login"); // Or to the homepage or wherever the user should go
   };
 
   return (
@@ -94,6 +106,14 @@ const ProfilePage: React.FC = () => {
           {isLoading ? "Saving..." : "Save Changes"}
         </button>
       </form>
+
+      {/* Logout Button */}
+      <button
+        onClick={handleLogout}
+        className="w-full mt-4 p-3 bg-red-600 text-white rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500"
+      >
+        Log Out
+      </button>
     </div>
   );
 };

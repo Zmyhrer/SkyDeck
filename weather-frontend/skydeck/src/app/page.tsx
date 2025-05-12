@@ -24,7 +24,12 @@ const Home = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: name, email, password }),
+        body: JSON.stringify({
+          username: name,
+          email,
+          password,
+          unit_system: "US",
+        }),
       });
 
       const data = await response.json();

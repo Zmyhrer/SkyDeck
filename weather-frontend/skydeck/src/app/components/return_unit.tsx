@@ -18,7 +18,7 @@ const ReturnUnit: React.FC<UnitProps> = ({ weather }) => {
     { weather: "UV index", US: "index", EU: "index" },
   ];
 
-  const [unitSystem, setUnitSystem] = useState<"US" | "EU">("US");
+  const [unitSystem] = useState<"US" | "EU">("US");
 
   // Correcting the assignment logic using a ternary operator
   const weatherUnit =
