@@ -1,0 +1,120 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AvatarType {
+  bear
+  cat
+  dog
+  fox
+  owl
+  rabbit
+  panda
+  tiger
+  monkey
+  penguin
+  lion
+  koala
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            Int
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id])
+
+  @@unique([provider, providerAccountId])
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model User {
+  id              Int             @id @default(autoincrement())
+  username        String
+  password        String
+  email           String          @unique
+  unit_system     String          @default("metric")
+  role            String          @default("user")
+  avatar          AvatarType      @default(bear) // Now with default value
+  created_at      DateTime        @default(now())
+  updated_at      DateTime        @updatedAt
+  decks           Deck[]
+  sessions        Session[]
+  password_resets PasswordReset[] // Added relationship
+  Account         Account[]
+}
+
+model Session {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  user_id    Int
+  user       User     @relation(fields: [user_id], references: [id])
+  expires_at DateTime
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([user_id])
+  @@index([token])
+  @@index([expires_at]) // For cleaning up expired sessions
+}
+
+model PasswordReset {
+  id         Int      @id @default(autoincrement())
+  token      String   @unique
+  expires_at DateTime
+  user_id    Int
+  user       User     @relation(fields: [user_id], references: [id])
+
+  @@index([token])
+  @@index([user_id])
+  @@index([expires_at]) // For cleaning up expired tokens
+}
+
+model Deck {
+  id          Int       @id @default(autoincrement())
+  deck_name   String
+  deck_status Boolean   @default(false)
+  user_id     Int
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  user        User      @relation(fields: [user_id], references: [id])
+  elements    Element[]
+
+  @@index([user_id])
+  @@index([deck_name])
+}
+
+model Element {
+  id               Int      @id @default(autoincrement())
+  element_name     String
+  element_operator String
+  element_value    Float
+  element_arrowUp  Boolean  @default(false)
+  deck_id          Int
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+  deck             Deck     @relation(fields: [deck_id], references: [id])
+
+  @@index([deck_id])
+}
