@@ -16,7 +16,7 @@ async def create_deck(deck: DeckBase, db: db_dependency):
     db.add(db_deck)
     db.commit()
     db.refresh(db_deck)
-    return deck
+    return {"success": True, "deck": {"id": db_deck.id, "deck_name": db_deck.deck_name}}
 
 #Deck - Update
 @router.put("/update/{deck_id}")
@@ -28,7 +28,7 @@ async def update_deck(deck_id: int, updated_deck: DeckBase, db: db_dependency):
     deck.deck_name = updated_deck.deck_name
     db.commit()
     db.refresh(deck)
-    return deck
+    return {"success": True, "deck": {"id": deck.id, "deck_name": deck.deck_name}}
 
 #Deck - Delete
 @router.delete("/delete/{deck_id}")

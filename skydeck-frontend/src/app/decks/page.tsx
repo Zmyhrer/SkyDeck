@@ -1,72 +1,107 @@
 "use client";
 
 import { useNavLink } from "@/utils/navigation";
-import React from "react";
+import React, { useState } from "react";
 import dataDecks from "@/data/decks.json";
-import ReturnUnit from "@/app/components/return_unit";
+import PopupLeft from "../components/popup-left";
+import DeckCard from "../components/deckCards";
+
 
 const Page = () => {
   const navLink = useNavLink();
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [newDeckName, setNewDeckName] = useState("");
+  const [showNotification, setShowNotification] = useState(false);
+
+  const triggerNotification = () => {
+    setShowNotification(true);
+  };
 
   const handleViewDeck = (id: string) => {
     navLink({ path: `/decks/elements/${id}` });
   };
 
-  const handleAddDeck = () => {
-    navLink({ path: "/decks/addDeck" });
+  const handleAddDeck = async () => {
+    if (!newDeckName.trim()) return;
+
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("http://127.0.0.1:8000/deck/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ deck_name: newDeckName, user_id: 1 }),
+      });
+
+      const data = await res.json();
+      console.log(data.success)
+
+      if (data.success) {
+        triggerNotification();
+        setNewDeckName(""); // clear input
+      } else {
+        setError(data.message || "Failed to add deck");
+      }
+    } catch (err) {
+      console.error("Error adding deck:", err);
+      setError("Something went wrong.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="container mx-auto px-4 py-8">
-      {/* Header section with title and button */}
+      {showNotification && (
+        <PopupLeft
+          message="Deck added successfully!"
+          onClose={() => setShowNotification(false)}
+        />
+      )}
+
+      {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Your Decks</h1>
+      </div>
+
+      {/* Add Deck Input */}
+      <div className="flex w-full bg-white border border-black mb-6 rounded-2xl overflow-hidden">
+        <input
+          className="w-full text-left outline-none p-3"
+          placeholder='Running Weather'
+          value={newDeckName}
+          onChange={(e) => setNewDeckName(e.target.value)}
+        />
         <button
-          className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 hover:shadow-lg transition-all duration-200"
-          onClick={() => handleAddDeck()}
+          className="bg-blue-600 text-white px-6 disabled:bg-blue-300"
+          onClick={handleAddDeck}
+          disabled={loading || !newDeckName.trim()}
         >
-          ➕ Add Deck
+          {loading ? "Adding..." : "Add Deck"}
         </button>
       </div>
 
-      {/* Decks grid */}
+      {/* Show error if any */}
+      {error && (
+        <div className="text-red-600 font-semibold mb-4">{error}</div>
+      )}
+
+      {/* Decks Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {dataDecks.data.map((deck, index) => (
-          <div
-            key={index}
-            className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
-          >
-            <div className="p-6 h-full flex flex-col justify-between">
-              <div>
-                <h2 className="text-xl font-bold text-gray-800 mb-3">
-                  {deck.deckName}
-                </h2>
-                <div className="space-y-3">
-                  {deck.elements.slice(0, 4).map((element, i) => (
-                    <div
-                      key={i}
-                      className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded-lg"
-                    >
-                      <span className="text-gray-600 font-medium">
-                        {element.title}
-                      </span>
-                      <span className="text-gray-800 font-semibold">
-                        {element.value} <ReturnUnit weather={element.title} />
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-              <button
-                className="mt-4 w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200"
-                onClick={() => handleViewDeck((index + 1).toString())}
-              >
-                View Deck
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+          {dataDecks.data.map((deck, index) => (
+            <DeckCard
+              key={index}
+              id={(index + 1).toString()}
+              name={deck.deckName}
+              elements={deck.elements}
+              onView={handleViewDeck}
+            />
+          ))}
+        </div>
+
     </div>
   );
 };
