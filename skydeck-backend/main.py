@@ -1,9 +1,5 @@
 from fastapi import FastAPI
-from db.routes import db_router  # or from folder.routes if in subfolder
-from weather.routes import weather_router
+from routes import router
 
 app = FastAPI()
-
-app.include_router(db_router)
-app.include_router(weather_router)
-
+app.include_router(router)
