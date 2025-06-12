@@ -1,12 +1,11 @@
 "use client";
 
-// app/dashboard/page.tsx (or wherever you want to display the dashboard)
 import React, { useState, useEffect } from "react";
 import Card from "@/app/components/dashboard_card";
 
 const Dashboard: React.FC = () => {
   const [userRole, setUserRole] = useState<string | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
 
   const weatherReport = {
     forecast: [
@@ -27,25 +26,16 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    async function fetchRole() {
-      try {
-        const res = await fetch("/api/getUserRole");
-        const data = await res.json();
+    // localStorage is only available in the browser, so do this in useEffect
+    const role = localStorage.getItem("role");
 
-        if (data.role) {
-          setUserRole(data.role);
-        } else {
-          setUserRole(null);
-        }
-      } catch (error) {
-        console.error("Failed to fetch role", error);
-        setUserRole(null);
-      } finally {
-        setLoading(false);
-      }
+    if (role) {
+      setUserRole(role);
+    } else {
+      setUserRole(null);
     }
 
-    fetchRole();
+    setLoading(false);
   }, []);
 
   if (loading) {

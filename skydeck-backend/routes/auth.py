@@ -4,7 +4,7 @@ from typing import Annotated
 from database import get_db
 from models import User
 from schemas.user import UserLogin
-from auth_utils import pwd_context, create_access_token  # import utils
+from auth_utils import pwd_context, create_access_token
 
 router = APIRouter(prefix="/user", tags=["User"])
 
@@ -17,4 +17,9 @@ def login(user: UserLogin, db: db_dependency):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     access_token = create_access_token(data={"sub": db_user.username})
-    return {"access_token": access_token, "token_type": "bearer"}
+
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+        "user_role": db_user.role  # Make sure this is exactly the field name in your User model
+    }
