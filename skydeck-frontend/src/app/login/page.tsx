@@ -41,6 +41,7 @@ export default function LoginPage() {
       // Save token to localStorage or cookie
       localStorage.setItem("token", result.access_token)
       localStorage.setItem("role", result.user_role)
+      localStorage.setItem("username", result.username)
       router.push("/dashboard")
       // redirect or reload
     } catch (err: any) {

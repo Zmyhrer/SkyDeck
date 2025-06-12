@@ -21,5 +21,6 @@ def login(user: UserLogin, db: db_dependency):
     return {
         "access_token": access_token,
         "token_type": "bearer",
-        "user_role": db_user.role  # Make sure this is exactly the field name in your User model
+        "user_role": db_user.role,
+        "username": db_user.username
     }

@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import Annotated
-from models import Element
+from models import Element, Deck
 from database import get_db
 from schemas.element import ElementBase
 
@@ -18,6 +18,14 @@ async def create_element(element: ElementBase, db: db_dependency):
     db.refresh(db_element)
     return db_element
 
+#Element - Read
+@router.get("/read")
+def read_elements_by_deck(deck_id: int, db: Session = Depends(get_db)):
+    deck = db.query(Deck).filter(Deck.id == deck_id).first()
+    if not deck:
+        raise HTTPException(status_code=404, detail="Deck not found")
+
+    return deck.elements
 #Element - Update
 @router.put("/update")
 async def update_element(element_id: int, updated_element: ElementBase, db: db_dependency):

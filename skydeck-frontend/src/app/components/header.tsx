@@ -3,18 +3,28 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const Header = ({ onSidebarToggle }: { onSidebarToggle: () => void }) => {
-  const user = "John Doe";
+  const [user, setUser] = useState<string | null>(null);
   const pathname = usePathname();
 
+  useEffect(() => {
+    // Load user from localStorage
+    const storedUser = localStorage.getItem("username");
+    if (storedUser) {
+      setUser(storedUser);
+    }
+  }, []);
+
   // Don't show header on auth pages
-  if (["/signin", "/signup"].includes(pathname)) return null;
+  const hideHeader = ["/login", "/signup"].includes(pathname);
+  if (hideHeader) return null;
 
   return (
     <header className="fixed top-0 left-0 w-full bg-gray-800 z-50 text-white shadow-md">
       <div className="container mx-auto flex items-center justify-between p-4">
-        {/* Sidebar toggle button - accessible for screen readers */}
+        {/* Sidebar toggle button */}
         <button
           onClick={onSidebarToggle}
           className="text-white md:hidden p-2 rounded-md hover:bg-gray-700 transition-colors"
@@ -36,7 +46,7 @@ const Header = ({ onSidebarToggle }: { onSidebarToggle: () => void }) => {
           </svg>
         </button>
 
-        {/* Logo/Title - centered on mobile, left-aligned on desktop */}
+        {/* Logo */}
         <Link
           href="/dashboard"
           className="text-xl font-bold md:text-2xl md:ml-4 hover:text-gray-300 transition-colors"
@@ -46,7 +56,7 @@ const Header = ({ onSidebarToggle }: { onSidebarToggle: () => void }) => {
           </span>
         </Link>
 
-        {/* Profile section */}
+        {/* Right section */}
         {user ? (
           <div className="flex items-center space-x-2 ml-auto">
             <Link
@@ -56,7 +66,7 @@ const Header = ({ onSidebarToggle }: { onSidebarToggle: () => void }) => {
             >
               <div className="relative w-10 h-10">
                 <Image
-                  src={"/placeholder-avatar.png"} // Placeholder avatar
+                  src={"/avatar.avif"}
                   alt={`${user}'s profile`}
                   className="rounded-full object-cover"
                   fill
@@ -72,7 +82,7 @@ const Header = ({ onSidebarToggle }: { onSidebarToggle: () => void }) => {
         ) : (
           <div className="flex space-x-4 ml-auto">
             <Link
-              href="/signin"
+              href="/login"
               className="px-4 py-2 rounded-md hover:bg-gray-700 transition-colors"
             >
               Sign In
