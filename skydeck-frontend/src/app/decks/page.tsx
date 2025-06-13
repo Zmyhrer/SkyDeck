@@ -56,7 +56,7 @@ const Page = () => {
 
   // 👇 Your return block starts here
   return (
-    <div className="container mx-auto">
+    <div className="w-full">
       {showNotification && (
         <PopupLeft
           message="Deck added successfully!"
@@ -68,7 +68,7 @@ const Page = () => {
         <h1 className="text-3xl font-bold text-gray-800">Your Decks</h1>
       </div>
 
-      <div className="flex w-full bg-white border border-black mb-6 rounded-2xl overflow-hidden">
+      <div className="flex w-full bg-white border border-black mb-6 rounded-2xl overflow-x-hidden">
         <input
           className="w-full text-left outline-none p-3"
           placeholder="Running Weather"
