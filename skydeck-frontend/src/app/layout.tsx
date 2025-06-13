@@ -15,18 +15,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="min-h-screen overflow-x-hidden">
-        {/* Sidebar - Ensure it's properly positioned */}
+        {/* Header */}
+          <Header onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
+
+        <div className="flex flex-row flex-1 h-[100%]">
+          
+          {/* Sidebar - Ensure it's properly positioned */}
         <Sidebar
           isOpen={isSidebarOpen}
           onClose={() => setIsSidebarOpen(false)}
         />
-
-        <div className="flex flex-col flex-1">
-          {/* Header */}
-          <Header onSidebarToggle={() => setIsSidebarOpen(!isSidebarOpen)} />
-
           {/* Main Content */}
-          <main className="mt-[72px] ml-0 md:ml-[132px] md:p-4 flex-1 overflow-x-hidden bg-gray-100">
+          <main className=" p-1 md:p-4 flex-1 overflow-x-hidden bg-gray-100">
             {children}
           </main>
         </div>
